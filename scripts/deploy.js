@@ -25,7 +25,7 @@ async function printMemos(memos){
     const tipper = memo.name;
     const tipperAddress = memo.address;
     const message = memo.message;
-    console.log(`At ${timestamp},${tipper},(${tipperAddress}) saida:"${message}"`);
+    console.log(`At ${timestamp},${tipper},(${tipperAddress}) said:"${message}"`);
   }
   
 }
