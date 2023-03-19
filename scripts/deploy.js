@@ -8,7 +8,7 @@ const hre = require("hardhat");
 
 async function getbalance(address){
   const balanceBigInt= await hre.waffle.provider.getbalance(address);
-  return hre.ethers.utils.formatEther(balanceBigInt)
+  return hre.ethers.utils.formatEther(balanceBigInt);
 }
 
 async function main() {
