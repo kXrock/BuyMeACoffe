@@ -12,8 +12,11 @@ contract BuyMeACoffee {
         string message);
 
     struct Memo{
-        
-    }
+        address  from;
+        uint256 timestep;
+        string name;
+        string message;
+        }
         
     Memo[] memos;
 
@@ -27,17 +30,17 @@ contract BuyMeACoffee {
         require(msg.value>0,"Can't buy a coffee with 0 eth");
 
         memos.push(Memo(
-            msg.sender;
-            block.timestamp;
-            string _name;
-            string _message;
+            msg.sender,
+            block.timestamp,
+             _name,
+             _message
         ));
 
         emit NewMemo(
-            msg.sender;
-            block.timestamp;
-            string _name;
-            string _message;)
+            msg.sender,
+            block.timestamp,
+            _name,
+            _message);
     }
 
     function withdrawTips() public{
