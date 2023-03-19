@@ -4,16 +4,48 @@
 // You can also run a script with `npx hardhat run <script>`. If you do that, Hardhat
 // will compile your contracts, add the Hardhat Runtime Environment's members to the
 // global scope, and execute the script.
+const { cons } = require("fp-ts/lib/NonEmptyArray2v");
 const hre = require("hardhat");
+const { message } = require("statuses");
 
 async function getbalance(address){
-  const balanceBigInt= await hre.waffle.provider.getbalance(address);
+  const balanceBigInt = await hre.waffle.provider.getBalance(address);
   return hre.ethers.utils.formatEther(balanceBigInt);
 }
-
-async function main() {
+async function printBalances(addresses){
+  let idx=0;
+  for(const address of addresses){
+    console.log(`Address ${idx} balance:`, await getbalance(address));
+    idx++;
+  }
+}
+async function printMemos(memos){
+  for(const memo of memos){
+    const timestamp=memo.timestamp;
+    const tipper = memo.name;
+    const tipperAddress = memo.address;
+    const message = memo.message;
+    console.log(`At ${timestamp},${tipper},(${tipperAddress}) said:"${message}"`);
+  }
   
 }
+async function main() {
+  //Get example accounts
+  const [owner,tipper,tipper2,tipper3]=await hre.ethers.getSigners();
+
+  //Get the contract to deploy
+  const BuyMeACoffee = await hre.ethers.getContractFactory("BuyMeACoffee");
+  const buyMeACoffee = await BuyMeACoffee.deploy();
+  await buyMeACoffee.deployed(); 
+  console.log("BuyMeACoffee deployed to ",buyMeACoffee.address);
+ 
+  //Get balances before the coffee purchaces
+  const addresses=[owner.address,tipper.address,buyMeACoffee.address];
+  console.log("== start ==");
+  await printBalances(addresses);
+
+}
+
 
 // We recommend this pattern to be able to use async/await everywhere
 // and properly handle errors.
