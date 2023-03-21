@@ -21,9 +21,9 @@ async function printBalances(addresses){
 }
 async function printMemos(memos){
   for(const memo of memos){
-    const timestamp=memo.timestamp;
+    const timestamp= memo.timestamp;
     const tipper = memo.name;
-    const tipperAddress = memo.address;
+    const tipperAddress = memo.from;
     const message = memo.message;
     console.log(`At ${timestamp},${tipper},(${tipperAddress}) said:"${message}"`);
   }
@@ -40,11 +40,30 @@ async function main() {
   console.log("BuyMeACoffee deployed to ",buyMeACoffee.address);
  
   //Get balances before the coffee purchaces
-  const addresses=[owner.address,tipper.address,buyMeACoffee.address];
+  const addresses=[owner.address,tipper.address,tipper2.address,buyMeACoffee.address];
   console.log("== start ==");
   await printBalances(addresses);
 
+  //Buy the owner a few coffees
+  const tip={value:hre.ethers.utils.parseEther("1.0")};
+  await buyMeACoffee.connect(tipper).buyCoffee("Kerem","Cok iyimis!",tip);
+  await buyMeACoffee.connect(tipper2).buyCoffee("Ahmet","Iyi",tip) 
+  await buyMeACoffee.connect(tipper3).buyCoffee("Mehmet","Mukemmel",tip)    
+      
+  console.log("== bougth ==");
+  await printBalances(addresses);  
+
+//Withdraw funts
+
+  await buyMeACoffee.connect(owner).withdrawTips();
+  console.log("== withdraw ==");
+  await printBalances(addresses); 
+
+  console.log("== memos ==");
+  const memos= await buyMeACoffee.getMemos();
+  printMemos(memos);
 }
+
 
 
 // We recommend this pattern to be able to use async/await everywhere
@@ -53,3 +72,9 @@ main().catch((error) => {
   console.error(error);
   process.exitCode = 1;
 });
+
+
+/*--------------------SORULCAK SORULAR----------------------*
+1.tip nesnesini fonksiyona yazmamamıza rağmen contrata eth nasıl gidiyor
+2.memosları gösterirken timestamp undefined gözüküyor çözümü ve nedeni
+*/
