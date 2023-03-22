@@ -21,10 +21,11 @@ async function printBalances(addresses){
 }
 async function printMemos(memos){
   for(const memo of memos){
-    const timestamp= memo.timestamp;
+    const timestamp=await memo.timestamp;
     const tipper = memo.name;
     const tipperAddress = memo.from;
     const message = memo.message;
+    console.log(memo)
     console.log(`At ${timestamp},${tipper},(${tipperAddress}) said:"${message}"`);
   }
   
